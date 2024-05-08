@@ -1,4 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using System.ComponentModel;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace SchoolInsuancelog
 {
@@ -12,6 +14,8 @@ namespace SchoolInsuancelog
 
 
         //Methods and Functions
+
+        // Check DeviceQauntity
         static int CheckInt(string question, int min, int max)
         {
 
@@ -39,6 +43,7 @@ namespace SchoolInsuancelog
 
             }
         }
+        // change the colour of the error Message.
         static void DisplayErrorMessage(string error)
         {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -46,7 +51,7 @@ namespace SchoolInsuancelog
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-
+        //generate the Catagory Menu
         static string GenerateMenu(string menutType, List<string> listData)
         {
 
@@ -59,7 +64,6 @@ namespace SchoolInsuancelog
             }
             return menu;
         }
-
         static int deviceChoice(string menuType, List<string> deviceType)
         {
 
@@ -76,20 +80,32 @@ namespace SchoolInsuancelog
 
 
         }
-
+        // OneDevice start
 
         static void OneDevice()
         {
             int catergory = deviceChoice("catergory", deviceType);
 
-            Console.WriteLine("Enter the device brand name");
-            string deviceName = Console.ReadLine();
 
-            Console.WriteLine("Enter the individual cost of this device");
-            float deviceCost = (float)Convert.ToDouble(Console.ReadLine());
+            string deviceName = CheckName();
 
-            Console.WriteLine("Enter the Qauntity of this device");
-            int deviceQauntity = Convert.ToInt32(Console.ReadLine());
+            float deviceCost = checkFloat(1, 10000);
+
+            int deviceQauntity = checkInt(1, 100);
+
+            Console.Clear();
+
+            Console.WriteLine(",--.                                                                 ,---.                 \n" +
+"|  |,--,--,  ,---. ,--.,--.,--.--. ,--,--.,--,--,  ,---. ,---.      /  O  \\  ,---.  ,---. \n" +
+"|  ||      \\(  .-' |  ||  ||  .--'' ,-.  ||      \\| .--'| .-. :    |  .-.  || .-. || .-. | \n" +
+"|  ||  ||  |.-'  `)'  ''  '|  |   \\ '-'  ||  ||  |\\ `--.\\   --.    |  | |  || '-' '| '-' ' \n" +
+ "`--'`--''--'`----'  `----' `--'    `--`--'`--''--' `---' `----'    `--' `--'|  |-' |  |-'  \n");
+
+
+            Console.WriteLine($"Device Name: {deviceName}");
+            Console.WriteLine($"Device Type: {deviceType[catergory - 1]}");
+            Console.WriteLine($"Device individual Cost: {deviceCost}");
+            Console.WriteLine($"Device Qaunity: {deviceQauntity}");
 
             string ID = GenerateID(deviceName);
 
@@ -107,7 +123,7 @@ namespace SchoolInsuancelog
 
             }
 
-
+            // Device devaluation algo
 
             // declare the initial value of the product
             double initialValue = deviceCost;
@@ -136,11 +152,89 @@ namespace SchoolInsuancelog
             double totalValue = currentValue * deviceQauntity;
 
             // Print the final value after 6 months
+
             Console.WriteLine($"Your total device(s) value after 6 months: {totalValue:C2}");
 
+            Console.WriteLine($"device(s) code: {ID}");
 
 
 
+
+        }
+        static string CheckName()
+        {
+            while (true)
+            {
+                Console.WriteLine("Enter the device brand name");
+
+                string name = Console.ReadLine();
+
+                if (!string.IsNullOrWhiteSpace(name) && Regex.IsMatch(name, @"^[a-zA-Z0-100]+$"))
+                {
+                    name = name.ToUpper();
+
+                    return name;
+                }
+                DisplayErrorMessage("ERROR: You must enter a name");
+
+
+            }
+        }
+
+        static float checkFloat(int min, int max)
+        {
+
+
+            while (true)
+            {
+                try
+                {
+                    Console.WriteLine("Enter the individual cost of this device");
+
+
+                    float userFloat = (float)Convert.ToDecimal(Console.ReadLine());
+
+                    if (userFloat >= min && userFloat <= max)
+                    {
+                        return userFloat;
+                    }
+
+                    DisplayErrorMessage($"INVALID INTERGER, PLEASE ONLY ENTER NUMBERS BETWEEN {min} & {max}");
+
+                }
+                catch
+                {
+                    DisplayErrorMessage($"INVALID INTERGER, PLEASE ONLY ENTER NUMBERS BETWEEN {min} & {max}");
+                }
+            }
+        }
+
+        static int checkInt(int min, int max)
+        {
+
+
+            while (true)
+            {
+                try
+                {
+                    Console.WriteLine("Enter the quantity cost of this device");
+
+
+                    int userInt = (int)Convert.ToDecimal(Console.ReadLine());
+
+                    if (userInt >= min && userInt <= max)
+                    {
+                        return userInt;
+                    }
+
+                    DisplayErrorMessage($"Enter the Qauntity of this device {min} & {max}");
+
+                }
+                catch
+                {
+                    DisplayErrorMessage($"Enter the Qauntity of this device {min} & {max}");
+                }
+            }
         }
 
 
@@ -159,25 +253,38 @@ namespace SchoolInsuancelog
             return id;
         }
 
-        // Device devaluation algo
+        // Check proceed method​
+        static string CheckProcced()
+        {
+            while (true)
+            {
+                Console.WriteLine("Press <ENTER> to add another device or press 'x' to exit");
+
+                string checkProceed = Console.ReadLine();
+                checkProceed = checkProceed.ToUpper();
+
+                if (checkProceed.Equals("") || checkProceed.Equals("X"))
+                {
+                    
+                    
+                    return checkProceed;
+                }
+                DisplayErrorMessage("ERROR Invalid choice,Press <ENTER> to add another device or press 'x' to exit ");
 
 
-        
+            }
+        }
+
+
+
+
 
 
 
 
         static void Main(string[] args)
         {
-            // Local Variables
-        
-
-            // Label app algo.
             // Display App Title.
-
-            // devaluation period 6 month algo
-
-            
 
             Console.WriteLine(",--.                                                                 ,---.                 \n" +
        "|  |,--,--,  ,---. ,--.,--.,--.--. ,--,--.,--,--,  ,---. ,---.      /  O  \\  ,---.  ,---. \n" +
@@ -185,25 +292,14 @@ namespace SchoolInsuancelog
        "|  ||  ||  |.-'  `)'  ''  '|  |   \\ '-'  ||  ||  |\\ `--.\\   --.    |  | |  || '-' '| '-' ' \n" +
        "`--'`--''--'`----'  `----' `--'    `--`--'`--''--' `---' `----'    `--' `--'|  |-' |  |-'  \n" +
        "                                                                            `--'   `--'    \n");
+            string proceed = "";
+            while (proceed.Equals(""))
+            {
+                OneDevice();
+                proceed = CheckProcced();
+            }
+            
 
-
-            OneDevice();
-
-            Console.WriteLine("Press <Enter> to continue");
-            Console.ReadLine();
-            Console.Clear();
-
-
-           
         }
     }
 }
-
-
-
-
-
-
-
-
-
